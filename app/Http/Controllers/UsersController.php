@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller {
 
@@ -24,7 +25,33 @@ class UsersController extends Controller {
             ]);
         }
         return response()->json([
-                    "status" => "Email or Password is wrong"
+                    "status" => "failed",
+                    "msg" => "Emal or Password is wrong"
+        ]);
+    }
+
+    public function register(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+                    'name' => 'required|min:2|max:50',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|min:6',
+                    'confirm_password' => 'required|min:6|max:20|same:password',
+        ]);
+        if ($validator->fails())
+            return response()->json([
+                        "status" => "failed",
+                        "errors" => $validator->errors()
+            ]);
+
+        $requestData = $request->all();
+
+        $requestData['password'] = bcrypt($requestData['password']);
+
+        \App\User::create($requestData);
+
+        return response()->json([
+                    "status" => "done"
         ]);
     }
 

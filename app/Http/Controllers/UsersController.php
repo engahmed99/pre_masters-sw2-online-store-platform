@@ -55,4 +55,11 @@ class UsersController extends Controller {
         ]);
     }
 
+    public function getUsers(Request $request) {
+        return response()->json([
+                    "status" => "done",
+                    "data" => \App\User::all()->toArray()
+        ]);
+    }
+
 }

@@ -19,4 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post("login", "UsersController@login");
 Route::post("register", "UsersController@register");
-Route::get("get-users", "UsersController@getUsers");
+Route::get("get-users", "UsersController@getUsers")->middleware('security');;
